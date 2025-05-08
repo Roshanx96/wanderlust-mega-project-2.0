@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FRONTEND_TAG', description: 'Frontend Docker Image Tag', defaultValue: 'latest')
+        string(name: 'BACKEND_TAG', description: 'Backend Docker Image Tag', defaultValue: 'latest')
+    }
+
+    environment {
+        GITHUB_CREDENTIALS = 'Github-cred'
+        GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project.git'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+            }
+        }
+
+        stage('Update Kubernetes Manifests') {
+            steps {
+                sh '''
+                    sed -i "s|roshanx/wanderlust-frontend-beta:.*|roshanx/wanderlust-frontend-beta:${FRONTEND_TAG}|g" kubernetes/frontend.yaml
+                    sed -i "s|roshanx/wanderlust-backend-beta:.*|roshanx/wanderlust-backend-beta:${BACKEND_TAG}|g" kubernetes/backend.yaml
+                '''
+            }
+        }
+
+        stage('Commit and Push Changes') {
+            steps {
+                sh '''
+                    git config user.email "jenkins@example.com"
+                    git config user.name "Jenkins CI"
+                    git add kubernetes/frontend.yaml kubernetes/backend.yaml
+                    git commit -m "Update Kubernetes manifests with new Docker tags [CI/CD]"
+                    git push origin main
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            mail to: 'roshankhopade5339@gmail.com',
+                 subject: "✅ Wanderlust CD Pipeline Successful",
+                 body: "The Wanderlust CD pipeline completed successfully. Kubernetes manifests updated."
+        }
+        failure {
+            mail to: 'roshankhopade5339@gmail.com',
+                 subject: "❌ Wanderlust CD Pipeline Failed",
+                 body: "The Wanderlust CD pipeline has failed. Please check Jenkins."
+        }
+    }
+}
