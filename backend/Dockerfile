@@ -20,8 +20,8 @@ WORKDIR /app
 # Copy dependencies and app code from the build stage
 COPY --from=build /app /app
 
-# Expose port for backend service (usually 3000 for Node.js)
-EXPOSE 3000
+# Expose port for backend service (usually 5000 for Node.js)
+EXPOSE 5000
 
 # Set environment variables (you can override these at runtime)
 ENV NODE_ENV=production
