@@ -18,12 +18,32 @@ pipeline {
             }
         }
 
-        stage('Update Kubernetes Manifests') {
+        stage('Verify: Docker Image Tags') {
             steps {
-                sh '''
-                    sed -i "s|roshanx/wanderlust-frontend-beta:.*|roshanx/wanderlust-frontend-beta:${FRONTEND_TAG}|g" kubernetes/frontend.yaml
-                    sed -i "s|roshanx/wanderlust-backend-beta:.*|roshanx/wanderlust-backend-beta:${BACKEND_TAG}|g" kubernetes/backend.yaml
-                '''
+                script{
+                    echo "FRONTEND_TAG: ${params.FRONTEND_TAG}"
+                    echo "BACKEND_TAG: ${params.BACKEND_TAG}"
+                }
+            }
+        }
+        
+        
+        stage("Update: Kubernetes manifests"){
+            steps{
+                script{
+                    dir('kubernetes'){
+                        sh """
+                            sed -i -e s/wanderlust-backend-beta.*/wanderlust-backend-beta:${params.BACKEND_TAG}/g backend.yaml
+                        """
+                    }
+                    
+                    dir('kubernetes'){
+                        sh """
+                            sed -i -e s/wanderlust-frontend-beta.*/wanderlust-frontend-beta:${params.FRONTEND_TAG}/g frontend.yaml
+                        """
+                    }
+                    
+                }
             }
         }
 
