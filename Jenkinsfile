@@ -116,9 +116,7 @@ pipeline {
 
     post {
         failure {
-            mail to: 'roshankhopade5339@gmail.com',
-                 subject: "❌ Wanderlust CI Pipeline Failed",
-                 body: "The Wanderlust CI pipeline has failed. Please check Jenkins."
+                 echo "The Wanderlust CI pipeline has failed. Please check Jenkins."
         }
     }
 }
