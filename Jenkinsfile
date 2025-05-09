@@ -68,10 +68,10 @@ pipeline {
             steps {
                 sh '''
                     chmod +x Automations/updatefrontendnew.sh
-                    ./Automation/updatefrontendnew.sh
+                    ./Automations/updatefrontendnew.sh
 
                     chmod +x Automations/updatebackendnew.sh
-                    ./Automation/updatebackendnew.sh
+                    ./Automations/updatebackendnew.sh
                 '''
             }
         }
