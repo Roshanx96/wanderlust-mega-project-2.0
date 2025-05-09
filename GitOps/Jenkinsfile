@@ -65,7 +65,7 @@ pipeline {
                  echo "✅ Wanderlust CD Pipeline Successful"
         }
         failure {
-                 echo "❌ Wanderlust CD Pipeline Failed",
+                 echo "❌ Wanderlust CD Pipeline Failed"
 
         }
     }
