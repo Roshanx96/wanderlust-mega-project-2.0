@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: wanderlust-backend-beta:latest
+          image: wanderlust-backend-beta:v11
           ports:
             - containerPort: 5000
           readinessProbe:
