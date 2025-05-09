@@ -62,14 +62,11 @@ pipeline {
 
     post {
         success {
-            mail to: 'roshankhopade5339@gmail.com',
-                 subject: "✅ Wanderlust CD Pipeline Successful",
-                 body: "The Wanderlust CD pipeline completed successfully. Kubernetes manifests updated."
+                 echo "✅ Wanderlust CD Pipeline Successful"
         }
         failure {
-            mail to: 'roshankhopade5339@gmail.com',
-                 subject: "❌ Wanderlust CD Pipeline Failed",
-                 body: "The Wanderlust CD pipeline has failed. Please check Jenkins."
+                 echo "❌ Wanderlust CD Pipeline Failed",
+
         }
     }
 }
