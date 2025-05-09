@@ -67,10 +67,10 @@ pipeline {
         stage('Update .env Files') {
             steps {
                 sh '''
-                    chmod +x Automation/updatefrontendnew.sh
+                    chmod +x Automations/updatefrontendnew.sh
                     ./Automation/updatefrontendnew.sh
 
-                    chmod +x Automation/updatebackendnew.sh
+                    chmod +x Automations/updatebackendnew.sh
                     ./Automation/updatebackendnew.sh
                 '''
             }
