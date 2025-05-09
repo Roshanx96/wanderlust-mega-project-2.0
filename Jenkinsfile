@@ -26,7 +26,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+                git branch: 'main', credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
             }
         }
 
