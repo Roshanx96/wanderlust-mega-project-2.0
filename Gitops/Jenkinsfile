@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FRONTEND_TAG', defaultValue: 'latest', description: 'Frontend Docker image tag')
+        string(name: 'BACKEND_TAG', defaultValue: 'latest', description: 'Backend Docker image tag')
+    }
+
+    environment {
+        GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
+        BRANCH = 'main'
+    }
+
+    stages {
+
+        stage('Checkout Code') {
+            steps {
+                git branch: "${BRANCH}", url: "${GITHUB_REPO}"
+            }
+        }
+
+        stage('Update Kubernetes Manifests') {
+            steps {
+                sh """
+                sed -i 's|roshanx/wanderlust-frontend:.*|roshanx/wanderlust-frontend:${FRONTEND_TAG}|' kubernetes/frontend-deployment.yml
+                sed -i 's|roshanx/wanderlust-backend:.*|roshanx/wanderlust-backend:${BACKEND_TAG}|' kubernetes/backend-deployment.yml
+                """
+            }
+        }
+
+        stage('Commit and Push Changes') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-credentials', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    sh '''
+                    git config user.email "cd@jenkins.com"
+                    git config user.name "jenkins-cd"
+                    git add .
+                    git commit -m "Update image tags to frontend:${FRONTEND_TAG}, backend:${BACKEND_TAG}" || echo "No changes to commit"
+                    git push https://${GIT_USER}:${GIT_PASS}@github.com/Roshanx96/wanderlust-mega-project-2.0.git HEAD:${BRANCH}
+                    '''
+                }
+            }
+        }
+
+        stage('Notify Success') {
+            steps {
+                echo "✅ CD Pipeline Successful: Wanderlust"
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo "❌ CD Pipeline Failed: Wanderlust"
+        }
+    }
+}
