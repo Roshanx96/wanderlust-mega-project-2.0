@@ -7,6 +7,7 @@ pipeline {
     }
 
     environment {
+        GITHUB_CREDENTIALS = 'Github-cred'
         GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
         BRANCH = 'main'
     }
@@ -15,7 +16,7 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git branch: "${BRANCH}", url: "${GITHUB_REPO}"
+                git branch: "${BRANCH}", credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
             }
         }
 
