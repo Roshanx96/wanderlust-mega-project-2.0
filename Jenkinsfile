@@ -10,7 +10,7 @@ pipeline {
         GITHUB_CREDENTIALS = 'Github-cred'
         GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
         DOCKERHUB_USERNAME = 'roshanx'
-        SONARQUBE_ENV = 'SonarQube' // Must match Jenkins SonarQube config name
+        SONARQUBE_ENV = 'Sonar' // Must match Jenkins SonarQube config name
         TRIVY_SEVERITY = 'CRITICAL,HIGH'
     }
 
