@@ -53,7 +53,7 @@ pipeline {
             steps {
                 sh '''
                 mkdir -p dependency-check
-                dependency-check.sh --project "Wanderlust" --scan . --format "ALL" --out dependency-check
+                dependency-check.sh --project "wanderlust" --scan . --format "ALL" --out dependency-check
                 '''
             }
         }
