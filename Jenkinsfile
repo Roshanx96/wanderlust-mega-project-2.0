@@ -7,6 +7,7 @@ pipeline {
     }
 
     environment {
+        GITHUB_CREDENTIALS = 'Github-cred'
         GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
         DOCKERHUB_USERNAME = 'roshanx'
         SONARQUBE_ENV = 'SonarQube' // Must match Jenkins SonarQube config name
@@ -33,7 +34,9 @@ pipeline {
 
         stage('Checkout Code') {
             steps {
-                git url: "${GITHUB_REPO}"
+                git branch: 'main',
+                    credentialsId: env.GITHUB_CREDENTIALS,
+                    url: env.GITHUB_REPO
             }
         }
 
