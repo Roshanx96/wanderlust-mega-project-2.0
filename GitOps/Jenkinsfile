@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'FRONTEND_TAG', description: 'Frontend Docker Image Tag', defaultValue: 'latest')
+        string(name: 'BACKEND_TAG', description: 'Backend Docker Image Tag', defaultValue: 'latest')
+    }
+
+    environment {
+        GITHUB_CREDENTIALS = 'Github-cred'
+        GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+            }
+        }
+
+        stage('Update Kubernetes Manifests') {
+            steps {
+                sh '''
+                    sed -i "s|roshanx/wanderlust-frontend-beta:.*|roshanx/wanderlust-frontend-beta:${FRONTEND_TAG}|g" kubernetes/frontend.yaml
+                    sed -i "s|roshanx/wanderlust-backend-beta:.*|roshanx/wanderlust-backend-beta:${BACKEND_TAG}|g" kubernetes/backend.yaml
+                '''
+            }
+        }
+
+        stage('Commit and Push Changes') {
+            steps {
+                sh '''
+                    git add kubernetes/frontend.yaml kubernetes/backend.yaml
+                    git commit -m "Update Kubernetes manifests with new Docker tags [CI/CD]"
+                    git push origin main
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+     
+                 echo "✅ Wanderlust CD Pipeline Successful"
+
+        }
+        failure {
+
+                 echo "❌ Wanderlust CD Pipeline Failed"
+        }
+    }
+}
