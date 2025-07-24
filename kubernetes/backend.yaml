@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  namespace: wanderlust
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: roshanx/wanderlust-backend-beta:v1
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: wanderlust
+spec:
+  selector:
+    app: backend
+  type: NodePort
+  ports:
+    - port: 8080         # inside cluster port
+      targetPort: 8080   # container port
+      nodePort: 31100    # external port on Node
+      protocol: TCP
