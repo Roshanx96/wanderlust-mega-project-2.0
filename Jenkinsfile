@@ -10,7 +10,7 @@ pipeline {
         GITHUB_CREDENTIALS = 'Github-cred'
         DOCKER_CREDENTIALS = 'Dockerhub-cred'
         DOCKERHUB_USERNAME = 'roshanx' // Your DockerHub username
-        GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project.git'
+        GITHUB_REPO = 'https://github.com/Roshanx96/wanderlust-mega-project-2.0.git'
     }
 
     stages {
@@ -116,9 +116,9 @@ pipeline {
 
     post {
         failure {
-            mail to: 'roshankhopade5339@gmail.com',
-                 subject: "❌ Wanderlust CI Pipeline Failed",
-                 body: "The Wanderlust CI pipeline has failed. Please check Jenkins."
+           
+                 echo "❌ Wanderlust CI Pipeline Failed"
+                 
         }
     }
 }
