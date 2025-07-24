@@ -24,5 +24,5 @@ RUN rm /etc/nginx/conf.d/default.conf
 # Add custom NGINX config (recommended)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
