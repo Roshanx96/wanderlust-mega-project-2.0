@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
+                git branch: 'main', credentialsId: "${env.GITHUB_CREDENTIALS}", url: "${env.GITHUB_REPO}"
             }
         }
 
@@ -29,24 +29,31 @@ pipeline {
 
         stage('Commit and Push Changes') {
             steps {
-                sh '''
-                    git add kubernetes/frontend.yaml kubernetes/backend.yaml
-                    git commit -m "Update Kubernetes manifests with new Docker tags [CI/CD]"
-                    git push origin main
-                '''
+                withCredentials([usernamePassword(credentialsId: "${env.GITHUB_CREDENTIALS}", usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                    sh '''
+
+                        git add kubernetes/frontend.yaml kubernetes/backend.yaml
+
+                        # Commit only if there are changes
+                        if ! git diff --cached --quiet; then
+                            git commit -m "Update Kubernetes manifests with new Docker tags [CI/CD]"
+                            git remote set-url origin https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Roshanx96/wanderlust-mega-project-2.0.git
+                            git push origin main
+                        else
+                            echo "No changes to commit"
+                        fi
+                    '''
+                }
             }
         }
     }
 
     post {
         success {
-     
-                 echo "✅ Wanderlust CD Pipeline Successful"
-
+            echo "✅ Wanderlust CD Pipeline Successful"
         }
         failure {
-
-                 echo "❌ Wanderlust CD Pipeline Failed"
+            echo "❌ Wanderlust CD Pipeline Failed"
         }
     }
 }
