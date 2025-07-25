@@ -27,7 +27,7 @@ spec:
         name: mongo-storage
       spec:
         accessModes: [ "ReadWriteOnce" ]
-        storageClassName: gp2
+        storageClassName: ebs-sc
         resources:
           requests:
             storage: 7Gi
