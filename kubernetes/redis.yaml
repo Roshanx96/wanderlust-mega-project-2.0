@@ -31,7 +31,7 @@ spec:
         resources:
           requests:
             storage: 2Gi
-        storageClassName: gp2
+        storageClassName: ebs-sc
 ---
 apiVersion: v1
 kind: Service
